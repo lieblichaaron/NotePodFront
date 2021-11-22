@@ -1,11 +1,12 @@
 import React from 'react';
+import Login from './veiws/Login';
+import Dashboard from './veiws/Dashboard';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const code = new URLSearchParams(window.location.search).get('code');
 
 const App = function () {
-  return (
-    <div>
-      <h1>Hello React</h1>
-    </div>
-  );
+  return code ? <Dashboard code={code} /> : <Login />;
 };
 
 export default App;

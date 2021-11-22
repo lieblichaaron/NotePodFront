@@ -1,0 +1,151 @@
+import React, { useState, useEffect } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
+import EpisodeScreen from './EpisodeScreen';
+import useAuth from '../utils/useAuth';
+import PodcastSearchResult from '../components/PodcastSearchResult';
+import { I_DashboardProps } from '../utils/types/I_DashboardProps';
+import { I_SearchResult } from '../utils/types/I_SearchResult';
+import spotifyApi from '../utils/spotifyApi';
+
+const Dashboard = function ({ code }: I_DashboardProps) {
+  const [search, setSearch] = useState('');
+  const [searchResults, setSearchResults] = useState<I_SearchResult[]>([]);
+  const [selectedPodcast, setSelectedPodcast] = useState<I_SearchResult>();
+  const [selectedEpisode, setSelecteEpisode] = useState<I_SearchResult>();
+  const [offset, setOffset] = useState(0);
+  const accessToken = useAuth(code);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    spotifyApi.setAccessToken(accessToken);
+  }, [accessToken]);
+
+  useEffect(() => {
+    setSelectedPodcast(undefined);
+    if (!search) {
+      setSearchResults([]);
+      return;
+    }
+    if (!accessToken) return;
+    let cancel = false;
+    spotifyApi.searchShows(search).then((res) => {
+      if (cancel) return;
+      if (res.body.shows) {
+        setSearchResults(
+          res.body.shows.items.map((show) => {
+            return {
+              title: show.name,
+              uri: show.uri,
+              imageUrl: show.images[show.images.length - 2].url,
+              id: show.id,
+            };
+          }),
+        );
+      }
+    });
+
+    return () => {
+      cancel = true;
+    };
+  }, [accessToken, search]);
+
+  useEffect(() => {
+    if (!selectedPodcast) return;
+    spotifyApi
+      .getShowEpisodes(selectedPodcast.id, { limit: 50 })
+      .then((res) => {
+        setOffset(res.body.items.length + 1);
+        if (res.body.items) {
+          setSearchResults(
+            res.body.items.map((episode) => {
+              return {
+                title: episode.name,
+                uri: episode.uri,
+                imageUrl: episode.images[episode.images.length - 2].url,
+                id: episode.id,
+                time: episode.duration_ms,
+              };
+            }),
+          );
+        }
+      });
+  }, [selectedPodcast]);
+
+  const handlePagination = (e: any) => {
+    if (!selectedPodcast) return;
+    const bottom =
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom) {
+      spotifyApi
+        .getShowEpisodes(selectedPodcast.id, { limit: 50, offset })
+        .then((res) => {
+          setOffset(offset + res.body.items.length + 1);
+          if (res.body.items) {
+            setSearchResults([
+              ...searchResults,
+              ...res.body.items.map((episode) => {
+                return {
+                  title: episode.name,
+                  uri: episode.uri,
+                  imageUrl: episode.images[episode.images.length - 2].url,
+                  id: episode.id,
+                  time: episode.duration_ms,
+                };
+              }),
+            ]);
+          }
+        });
+    }
+  };
+
+  return (
+    <Container
+      className="d-flex flex-column py-2"
+      style={{ height: '100vh', width: '100vw' }}
+    >
+      {!selectedEpisode ? (
+        <>
+          <Form.Control
+            className="my-2"
+            type="search"
+            placeholder="Search Podcasts"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <div
+            onScroll={handlePagination}
+            style={{
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+            }}
+          >
+            {searchResults.map((result) => (
+              <PodcastSearchResult
+                isEpisode={!!selectedPodcast}
+                searchResult={result}
+                key={result.uri}
+                choosePodcast={setSelectedPodcast}
+                chooseEpisode={setSelecteEpisode}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <Button
+          className="btn btn-secondary btn-lg my-2"
+          onClick={() => setSelecteEpisode(undefined)}
+        >
+          Back to episodes
+        </Button>
+      )}
+      {accessToken && selectedEpisode && selectedPodcast && (
+        <EpisodeScreen accessToken={accessToken} podcast={selectedEpisode} />
+      )}
+    </Container>
+  );
+};
+
+export default Dashboard;
