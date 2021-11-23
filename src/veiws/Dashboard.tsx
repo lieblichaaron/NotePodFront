@@ -9,7 +9,12 @@ import spotifyApi from '../utils/spotifyApi';
 
 const Dashboard = function ({ code }: I_DashboardProps) {
   const [search, setSearch] = useState('');
-  const [searchResults, setSearchResults] = useState<I_SearchResult[]>([]);
+  const [podcastSearchResults, setPodcastSearchResults] = useState<
+    I_SearchResult[]
+  >([]);
+  const [episodeSearchResults, setEpisodeSearchResults] = useState<
+    I_SearchResult[]
+  >([]);
   const [selectedPodcast, setSelectedPodcast] = useState<I_SearchResult>();
   const [selectedEpisode, setSelecteEpisode] = useState<I_SearchResult>();
   const [offset, setOffset] = useState(0);
@@ -23,7 +28,7 @@ const Dashboard = function ({ code }: I_DashboardProps) {
   useEffect(() => {
     setSelectedPodcast(undefined);
     if (!search) {
-      setSearchResults([]);
+      setPodcastSearchResults([]);
       return;
     }
     if (!accessToken) return;
@@ -31,7 +36,7 @@ const Dashboard = function ({ code }: I_DashboardProps) {
     spotifyApi.searchShows(search).then((res) => {
       if (cancel) return;
       if (res.body.shows) {
-        setSearchResults(
+        setPodcastSearchResults(
           res.body.shows.items.map((show) => {
             return {
               title: show.name,
@@ -56,7 +61,7 @@ const Dashboard = function ({ code }: I_DashboardProps) {
       .then((res) => {
         setOffset(res.body.items.length + 1);
         if (res.body.items) {
-          setSearchResults(
+          setEpisodeSearchResults(
             res.body.items.map((episode) => {
               return {
                 title: episode.name,
@@ -81,8 +86,8 @@ const Dashboard = function ({ code }: I_DashboardProps) {
         .then((res) => {
           setOffset(offset + res.body.items.length + 1);
           if (res.body.items) {
-            setSearchResults([
-              ...searchResults,
+            setEpisodeSearchResults([
+              ...episodeSearchResults,
               ...res.body.items.map((episode) => {
                 return {
                   title: episode.name,
@@ -105,13 +110,22 @@ const Dashboard = function ({ code }: I_DashboardProps) {
     >
       {!selectedEpisode ? (
         <>
-          <Form.Control
-            className="my-2"
-            type="search"
-            placeholder="Search Podcasts"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          {!selectedPodcast ? (
+            <Form.Control
+              className="my-2"
+              type="search"
+              placeholder="Search Podcasts"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          ) : (
+            <Button
+              className="btn btn-secondary btn-lg my-2"
+              onClick={() => setSelectedPodcast(undefined)}
+            >
+              Back to Podcasts
+            </Button>
+          )}
           <div
             onScroll={handlePagination}
             style={{
@@ -122,15 +136,25 @@ const Dashboard = function ({ code }: I_DashboardProps) {
               justifyContent: 'center',
             }}
           >
-            {searchResults.map((result) => (
-              <PodcastSearchResult
-                isEpisode={!!selectedPodcast}
-                searchResult={result}
-                key={result.uri}
-                choosePodcast={setSelectedPodcast}
-                chooseEpisode={setSelecteEpisode}
-              />
-            ))}
+            {selectedPodcast
+              ? episodeSearchResults.map((result) => (
+                  <PodcastSearchResult
+                    isEpisode={!!selectedPodcast}
+                    searchResult={result}
+                    key={result.uri}
+                    choosePodcast={setSelectedPodcast}
+                    chooseEpisode={setSelecteEpisode}
+                  />
+                ))
+              : podcastSearchResults.map((result) => (
+                  <PodcastSearchResult
+                    isEpisode={!!selectedPodcast}
+                    searchResult={result}
+                    key={result.uri}
+                    choosePodcast={setSelectedPodcast}
+                    chooseEpisode={setSelecteEpisode}
+                  />
+                ))}
           </div>
         </>
       ) : (

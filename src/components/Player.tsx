@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import { I_SearchResult } from '../utils/types/I_SearchResult';

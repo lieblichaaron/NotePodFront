@@ -60,7 +60,7 @@ const EpisodeScreen = function ({
       });
 
       newPlayer.addListener('ready', ({ device_id }: { device_id: string }) => {
-        console.log(deviceId);
+        console.log(device_id);
         setDeviceId(device_id);
       });
       newPlayer.addListener(
@@ -91,7 +91,7 @@ const EpisodeScreen = function ({
       newPlayer.removeListener('not_ready');
       newPlayer.removeListener('player_state_changed');
     };
-  }, []);
+  }, [accessToken]);
 
   if (!accessToken) return null;
   return (
