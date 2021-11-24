@@ -3,8 +3,8 @@ import { Form, Button } from 'react-bootstrap';
 import EpisodeScreen from './EpisodeScreen';
 import useAuth from '../utils/useAuth';
 import SearchResultItem from '../components/SearchResultItem';
-import { I_DashboardProps } from '../utils/types/I_DashboardProps';
-import { I_SearchResult } from '../utils/types/I_SearchResult';
+import { I_DashboardProps } from '../utils/types/PropTypes/I_DashboardProps';
+import { I_SearchResult } from '../utils/types/GeneralTypes/I_SearchResult';
 import spotifyApi from '../utils/spotifyApi';
 
 const SearchPage = function ({ code }: I_DashboardProps) {

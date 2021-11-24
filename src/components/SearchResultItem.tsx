@@ -1,5 +1,5 @@
 import React, { SetStateAction, Dispatch } from 'react';
-import { I_SearchResult } from '../utils/types/I_SearchResult';
+import { I_SearchResult } from '../utils/types/GeneralTypes/I_SearchResult';
 
 const SearchResultItem = function ({
   searchResult,
