@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import EpisodeScreen from './EpisodeScreen';
 import useAuth from '../utils/useAuth';
-import PodcastSearchResult from '../components/PodcastSearchResult';
+import SearchResultItem from '../components/SearchResultItem';
 import { I_DashboardProps } from '../utils/types/I_DashboardProps';
 import { I_SearchResult } from '../utils/types/I_SearchResult';
 import spotifyApi from '../utils/spotifyApi';
 
-const Dashboard = function ({ code }: I_DashboardProps) {
+const SearchPage = function ({ code }: I_DashboardProps) {
   const [search, setSearch] = useState('');
   const [podcastSearchResults, setPodcastSearchResults] = useState<
     I_SearchResult[]
@@ -145,7 +145,7 @@ const Dashboard = function ({ code }: I_DashboardProps) {
           >
             {selectedPodcast
               ? episodeSearchResults.map((result) => (
-                  <PodcastSearchResult
+                  <SearchResultItem
                     isEpisode={!!selectedPodcast}
                     searchResult={result}
                     key={result.uri}
@@ -154,7 +154,7 @@ const Dashboard = function ({ code }: I_DashboardProps) {
                   />
                 ))
               : podcastSearchResults.map((result) => (
-                  <PodcastSearchResult
+                  <SearchResultItem
                     isEpisode={!!selectedPodcast}
                     searchResult={result}
                     key={result.uri}
@@ -179,4 +179,4 @@ const Dashboard = function ({ code }: I_DashboardProps) {
   );
 };
 
-export default Dashboard;
+export default SearchPage;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { msToTime } from '../utils/msToTime';
-import { I_NoteSectionProps } from '../utils/types/I_NoteSectionProps';
+import { I_NoteSectionProps } from '../utils/types/PropTypes/I_NoteSectionProps';
 
 const NoteSection = function ({
   noteTimeStamp,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FiEdit3, FiCheck, FiXCircle, FiTrash2 } from 'react-icons/fi';
 import { Form } from 'react-bootstrap';
 import { msToTime } from '../utils/msToTime';
-import { I_NoteProps } from '../utils/types/I_NoteProps';
+import { I_NoteProps } from '../utils/types/PropTypes/I_NoteProps';
 
 const ICON_SIZE = 20;
 const Note = function ({

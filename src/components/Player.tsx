@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import PlayerButton from './PlayerButton';
-import { I_PlayerProps } from '../utils/types/I_PlayerProps';
+import { I_PlayerProps } from '../utils/types/PropTypes/I_PlayerProps';
 import { msToTime } from '../utils/msToTime';
 
 const Player = function ({

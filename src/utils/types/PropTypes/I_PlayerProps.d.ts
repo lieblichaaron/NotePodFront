@@ -1,4 +1,4 @@
-import { I_SearchResult } from './I_SearchResult';
+import { I_SearchResult } from '../GeneralTypes/I_SearchResult';
 
 export interface I_PlayerProps {
   initialValue: number;

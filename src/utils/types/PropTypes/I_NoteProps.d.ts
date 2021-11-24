@@ -1,4 +1,4 @@
-import { I_Note } from './I_Note';
+import { I_Note } from '../GeneralTypes/I_Note';
 
 export interface I_NoteProps {
   note: I_Note;

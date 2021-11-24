@@ -1,7 +1,7 @@
 import React, { SetStateAction, Dispatch } from 'react';
 import { I_SearchResult } from '../utils/types/I_SearchResult';
 
-const PodcastSearchResult = function ({
+const SearchResultItem = function ({
   searchResult,
   choosePodcast,
   chooseEpisode,
@@ -50,4 +50,4 @@ const PodcastSearchResult = function ({
   );
 };
 
-export default PodcastSearchResult;
+export default SearchResultItem;

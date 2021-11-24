@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Loader from 'react-loader-spinner';
 import Player from '../components/Player';
-import { I_Note } from '../utils/types/I_Note';
+import { I_Note } from '../utils/types/GeneralTypes/I_Note';
 import NoteSection from '../components/NoteSection';
 import Note from '../components/Note';
-import { I_EpisodeScreenProps } from '../utils/types/I_EpisodeScreenProps';
+import { I_EpisodeScreenProps } from '../utils/types/PropTypes/I_EpisodeScreenProps';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 const EpisodeScreen = function ({
