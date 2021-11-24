@@ -35,11 +35,13 @@ const PodcastSearchResult = function ({
       />
 
       <p
+        className="text-color"
         style={{
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           textOverflow: 'ellipsis',
           maxWidth: '300px',
+          textAlign: 'center',
         }}
       >
         {searchResult.title}

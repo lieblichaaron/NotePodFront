@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import EpisodeScreen from './EpisodeScreen';
 import useAuth from '../utils/useAuth';
 import PodcastSearchResult from '../components/PodcastSearchResult';
@@ -104,9 +104,16 @@ const Dashboard = function ({ code }: I_DashboardProps) {
   };
 
   return (
-    <Container
-      className="d-flex flex-column py-2"
-      style={{ height: '100vh', width: '100vw' }}
+    <div
+      style={{
+        height: '100vh',
+        width: '100%',
+        backgroundColor: '#3b3b3b',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '10px 20px 0px 20px',
+        margin: 0,
+      }}
     >
       {!selectedEpisode ? (
         <>
@@ -168,7 +175,7 @@ const Dashboard = function ({ code }: I_DashboardProps) {
       {accessToken && selectedEpisode && selectedPodcast && (
         <EpisodeScreen accessToken={accessToken} podcast={selectedEpisode} />
       )}
-    </Container>
+    </div>
   );
 };
 

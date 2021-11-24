@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { FaPlay, FaPause } from 'react-icons/fa';
-import { I_SearchResult } from '../utils/types/I_SearchResult';
+import PlayerButton from './PlayerButton';
+import { I_PlayerProps } from '../utils/types/I_PlayerProps';
+import { msToTime } from '../utils/msToTime';
 
 const Player = function ({
   initialValue,
@@ -11,15 +12,10 @@ const Player = function ({
   play,
   isPaused,
   disabled,
-}: {
-  initialValue: number;
-  seek: (v: number) => void;
-  podcast: I_SearchResult;
-  play: () => void;
-  isPaused: boolean;
-  disabled: boolean;
-}) {
+  takeNote,
+}: I_PlayerProps) {
   const [currentPlace, setCurrentPlace] = useState(initialValue);
+
   useEffect(() => {
     setCurrentPlace(initialValue);
   }, [initialValue]);
@@ -35,17 +31,14 @@ const Player = function ({
     }
     return () => clearInterval(interval);
   }, [isPaused]);
-  function msToTime(duration: number) {
-    let seconds: string | number = Math.floor((duration / 1000) % 60);
-    let minutes: string | number = Math.floor((duration / (1000 * 60)) % 60);
-    let hours: string | number = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
-    hours = hours < 10 ? `0${hours}` : hours;
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    seconds = seconds < 10 ? `0${seconds}` : seconds;
+  const noteHandler = () => {
+    if (!isPaused) {
+      play();
+    }
+    takeNote();
+  };
 
-    return `${hours}:${minutes}:${seconds}`;
-  }
   if (!podcast.time) return null;
   return (
     <div
@@ -56,28 +49,20 @@ const Player = function ({
         alignItems: 'center',
       }}
     >
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={play}
-        style={{
-          border: 'none',
-          backgroundColor: 'green',
-          boxShadow: '0 0 4px 2px rgba(0,0,0,.2)',
-          cursor: 'pointer',
-          height: 50,
-          outline: 'none',
-          borderRadius: '100%',
-          width: 50,
-          position: 'relative',
-        }}
-      >
-        {isPaused ? (
-          <FaPlay style={{ top: 17, left: 18, position: 'absolute' }} />
-        ) : (
-          <FaPause style={{ top: 17, left: 17, position: 'absolute' }} />
-        )}
-      </button>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <PlayerButton
+          disabled={disabled}
+          isPaused={isPaused}
+          onClick={play}
+          type="play"
+        />
+        <PlayerButton
+          disabled={disabled}
+          isPaused={isPaused}
+          onClick={noteHandler}
+          type="note"
+        />
+      </div>
       <div
         style={{
           display: 'flex',
@@ -87,7 +72,9 @@ const Player = function ({
           alignItems: 'center',
         }}
       >
-        <span style={{ width: 100 }}>{msToTime(currentPlace)}</span>
+        <span style={{ width: 100 }} className="text-color">
+          {msToTime(currentPlace)}
+        </span>
         <Slider
           min={0}
           max={podcast.time - (podcast.time % 100)}
@@ -98,6 +85,7 @@ const Player = function ({
           disabled={disabled}
         />
         <span
+          className="text-color"
           style={{
             width: 100,
             textAlign: 'end',
